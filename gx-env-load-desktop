@@ -1,29 +1,7 @@
-#!/usr/bin/env python3
-import os
-
-chrootEnvPath="/opt/new-system-env"
-for i in os.listdir("{}/usr/share/applications".format(chrootEnvPath)):
-    if os.path.exists("/usr/share/applications/gx-env-{}".format(i)):
-        continue
-    info = ""
-    try:
-        with open("{}/usr/share/applications/{}".format(chrootEnvPath, i), "r") as file:
-            info = file.read()
-    except:
-        try:
-            with open("{}/opt/apps/{}/entries/applications/{}".format(chrootEnvPath, os.path.splitext(os.path.basename(i))[0], i), "r") as file:
-                info = file.read()
-        except:
-            continue
-    newInfo = ""
-    for r in info.splitlines():
-        if "exec=" in r.lower():
-            newInfo += "Exec=gx-env-run " + r[5:].strip() + "\n"
-        elif "name=" in r.lower() or "name[" in r.lower():
-            newInfo += r + "(兼容模式)\n"
-        else:
-            newInfo += r + "\n"
-    print(newInfo)
-    print(i)
-    with open("/usr/share/applications/gx-env-{}".format(i), "w") as file:
-        file.write(newInfo)
+#!/bin/bash
+chrootEnvPath=/opt/new-system-env
+gx-env-run-root python3 /gx-env/gx-env-load-desktop-in-chroot
+if [[ ! -d /usr/share/applications/gx-env ]]; then
+    sudo mkdir /usr/share/applications/gx-env -p
+fi
+sudo cp $chrootEnvPath/gx-env/desktop/* /usr/share/applications/gx-env -v

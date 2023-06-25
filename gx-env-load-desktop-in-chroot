@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+import os
+
+#chrootEnvPath="/opt/new-system-env"
+chrootEnvPath="/"
+if not os.path.exists("/gx-env/desktop"):
+    os.makedirs("/gx-env/desktop")
+if not os.path.exists("/gx-env/shell"):
+    os.makedirs("/gx-env/shell")
+for i in os.listdir("{}/usr/share/applications".format(chrootEnvPath)):
+    if os.path.exists("/usr/share/applications/gx-env-{}".format(i)):
+        continue
+    info = ""
+    try:
+        with open("{}/usr/share/applications/{}".format(chrootEnvPath, i), "r") as file:
+            info = file.read()
+    except:
+        try:
+            with open("{}/opt/apps/{}/entries/applications/{}".format(chrootEnvPath, os.path.splitext(os.path.basename(i))[0], i), "r") as file:
+                info = file.read()
+        except:
+            continue
+    newInfo = ""
+    for r in info.splitlines():
+        if "exec=" in r.lower():
+            #newInfo += "Exec=gx-env-run " + r[5:].strip() + "\n"
+            with open("/gx-env/shell/gx-env-{}.sh".format(os.path.splitext(os.path.basename(i))[0]), "w") as file:
+                file.write("#!/bin/bash\n" + r[5:].strip().replace("%F", "").replace("%f", "").replace("%u", "").replace("%U", ""))
+            newInfo += "Exec=gx-env-run bash \"/gx-env/shell/gx-env-{}.sh\"\n".format(os.path.splitext(os.path.basename(i))[0])
+        elif "name=" in r.lower() or "name[" in r.lower():
+            newInfo += r + "(兼容模式)\n"
+        else:
+            newInfo += r + "\n"
+    print(newInfo)
+    print(i)
+    with open("/gx-env/desktop/gx-env-{}".format(i), "w") as file:
+        file.write(newInfo)

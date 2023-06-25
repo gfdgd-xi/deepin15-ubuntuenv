@@ -11,11 +11,11 @@ fi
 echo aa > /tmp/env-$USER.txt
 if [[ ! -f $chrootEnvPath/tmp/env-$USER.txt ]]; then
     echo 未挂载目录，立即挂载
-    sudo ./load-env-root.sh
+    sudo gx-env-mount-root
 fi
 #user=`whoami`
 if [[ ! -f $chrootEnvPath/user/$USER ]]; then
-    ./load-env-user-root.sh
+    gx-env-adduser-root
     if [[ $? != 0 ]]; then
         echo Create User Error!
         exit 1

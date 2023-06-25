@@ -10,4 +10,4 @@ if [[ $firstPWD != $secondPWD ]]; then
     exit 1
 fi
 echo -e "$firstPWD\n$firstPWD\n\n\n\n\n\nY\n" | ./run-root.sh adduser `whoami`
-./run-root.sh bash -c "echo $USER >> /etc/sudo"
+gx-env-run-root bash -c "echo $USER >> /etc/sudo"

@@ -6,5 +6,5 @@ chrootEnvPath=/opt/new-system-env
 #fi
 command="$@"
 #echo $command
-sudo chroot $chrootEnvPath sudo -u $USER bash -c "$command"
+pkexec env DISPLAY=$DISPLAY chroot $chrootEnvPath sudo -u $USER bash -c "$command"
 #echo $@

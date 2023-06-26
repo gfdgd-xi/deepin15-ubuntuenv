@@ -28,8 +28,22 @@ for i in os.listdir("{}/usr/share/applications".format(chrootEnvPath)):
         if "exec=" in r.lower():
             #newInfo += "Exec=gx-env-run " + r[5:].strip() + "\n"
             with open("/gx-env/shell/gx-env-{}.sh".format(os.path.splitext(os.path.basename(i))[0]), "w") as file:
-                file.write("#!/bin/bash\n" + r[5:].strip().replace("%F", "").replace("%f", "").replace("%u", "").replace("%U", ""))
-            newInfo += "Exec=gx-env-run bash \"/gx-env/shell/gx-env-{}.sh\"\n".format(os.path.splitext(os.path.basename(i))[0])
+                program = r[5:].strip()
+                command = ""
+                if "%F" in program:
+                    program = program.replace("%F", "$1")
+                    command += " %F "
+                if "%f" in program:
+                    program = program.replace("%f", "$2")
+                    command += " %f "
+                if "%u" in program:
+                    program = program.replace("%u", "$3")
+                    command += " %u "
+                if "%U" in program:
+                    program = program.replace("%U", "$4")
+                    command += " %U "
+                file.write("#!/bin/bash\n" + program)
+            newInfo += "Exec=gx-env-run bash \"/gx-env/shell/gx-env-{}.sh\" {} \n".format(os.path.splitext(os.path.basename(i))[0], command)
         elif "name=" in r.lower() or "name[" in r.lower():
             newInfo += r + "(兼容模式)\n"
         elif "icon=" in r.lower():

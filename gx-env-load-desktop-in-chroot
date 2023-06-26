@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import subprocess
 
 #chrootEnvPath="/opt/new-system-env"
 chrootEnvPath="/"
@@ -7,6 +8,8 @@ if not os.path.exists("/gx-env/desktop"):
     os.makedirs("/gx-env/desktop")
 if not os.path.exists("/gx-env/shell"):
     os.makedirs("/gx-env/shell")
+if not os.path.exists("/gx-env/icons"):
+    os.makedirs("/gx-env/icons")
 for i in os.listdir("{}/usr/share/applications".format(chrootEnvPath)):
     if os.path.exists("/usr/share/applications/gx-env-{}".format(i)):
         continue
@@ -32,6 +35,13 @@ for i in os.listdir("{}/usr/share/applications".format(chrootEnvPath)):
         elif "icon=" in r.lower():
             if os.path.exists(r[5:]):
                 newInfo += "Icon=/opt/new-system-env/" + r[5:] + "\n"
+            else:
+                path = subprocess.getoutput("find /usr/share/icons -name '{}.???' | head -n1".format(r[5:]))
+                if os.path.islink(path):
+                    os.system("cp '{}' '/gx-env/icons/{}'".format(path, os.path.basename(path)))
+                    newInfo += "Icon=/opt/new-system-env/gx-env/icons/" + os.path.basename(path) + "\n"
+                else:
+                    newInfo += "Icon=/opt/new-system-env/" + path + "\n"
         else:
             newInfo += r + "\n"
     print(newInfo)

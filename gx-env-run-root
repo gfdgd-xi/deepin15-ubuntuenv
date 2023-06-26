@@ -4,7 +4,12 @@ chrootEnvPath=/opt/new-system-env
 #    echo 请使用 root 权限运行
 #    exit 1
 #fi
+echo aa > /tmp/env-$USER.txt
+if [[ ! -f $chrootEnvPath/tmp/env-$USER.txt ]]; then
+    echo 未挂载目录，立即挂载
+    sudo gx-env-mount-root
+fi
 command="$@"
 #echo $command
-sudo chroot $chrootEnvPath "$@"
+pkexec env DISPLAY=$DISPLAY chroot $chrootEnvPath "$@"
 #echo $@

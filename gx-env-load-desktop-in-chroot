@@ -29,6 +29,9 @@ for i in os.listdir("{}/usr/share/applications".format(chrootEnvPath)):
             newInfo += "Exec=gx-env-run bash \"/gx-env/shell/gx-env-{}.sh\"\n".format(os.path.splitext(os.path.basename(i))[0])
         elif "name=" in r.lower() or "name[" in r.lower():
             newInfo += r + "(兼容模式)\n"
+        elif "icon=" in r.lower():
+            if os.path.exists(r[5:]):
+                newInfo += "Icon=/opt/new-system-env/" + r[5:] + "\n"
         else:
             newInfo += r + "\n"
     print(newInfo)

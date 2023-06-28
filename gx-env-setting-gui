@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+import os
+import sys
+import threading
+import PyQt5.QtWidgets as QtWidgets
+
+
+app = QtWidgets.QApplication(sys.argv)
+window = QtWidgets.QMainWindow()
+widget = QtWidgets.QWidget()
+layout = QtWidgets.QGridLayout()
+sparkStoreRun = QtWidgets.QPushButton("打开星火应用商店")
+gdebiRun = QtWidgets.QPushButton("安装 deb 包")
+xfce4TerminalRun = QtWidgets.QPushButton("终端")
+xfce4TerminalRootRun = QtWidgets.QPushButton("终端（root）")
+sparkStoreRun.clicked.connect(lambda: threading.Thread(target=os.system, args=["gx-env-run-root spark-store --no-sandbox ; pkexec env `printenv` gx-env-run"]).start())
+gdebiRun.clicked.connect(lambda: threading.Thread(target=os.system, args=["gx-env-run-root gdebi ; pkexec env `printenv` gx-env-run"]).start())
+xfce4TerminalRun.clicked.connect(lambda: threading.Thread(target=os.system, args=["gx-env-run xfce4-terminal"]).start())
+xfce4TerminalRootRun.clicked.connect(lambda: threading.Thread(target=os.system, args=["gx-env-run-root xfce4 ; pkexec env `printenv` gx-env-run"]).start())
+layout.addWidget(sparkStoreRun, 0, 0)
+layout.addWidget(gdebiRun, 0, 1)
+layout.addWidget(xfce4TerminalRun, 0, 2)
+layout.addWidget(xfce4TerminalRootRun, 0, 3)
+widget.setLayout(layout)
+window.setCentralWidget(widget)
+window.show()
+sys.exit(app.exec_())

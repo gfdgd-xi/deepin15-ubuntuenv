@@ -1,6 +1,6 @@
 #!/bin/bash
 chrootEnvPath=/opt/new-system-env
-if [[ -f $HOME/.config/gx-env/nosandbox ]]; then
+if [[ ! -f $HOME/.config/gx-env/nosandbox ]]; then
     gx-env-run-root python3 /gx-env/gx-env-load-desktop-in-chroot
 else
     gx-env-run-root python3 /gx-env/gx-env-load-desktop-in-chroot 1

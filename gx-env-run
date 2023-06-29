@@ -21,6 +21,6 @@ if [[ ! -f $chrootEnvPath/tmp/env-$USER.txt ]]; then
 fi
 command="$@"
 #echo $command
-pkexec env `printenv` chroot $chrootEnvPath sudo -u $USER bash -c "$command"
+pkexec env `gx-env-show-env-list` chroot $chrootEnvPath sudo -u $USER bash -c "$command"
 #echo $@
 #pkexec gx-env-load-desktop 

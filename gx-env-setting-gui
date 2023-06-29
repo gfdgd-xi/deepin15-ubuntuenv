@@ -16,7 +16,7 @@ def Save():
             os.mknod("{}/.config/gx-env/nosandbox".format(homePath))
         if not allCommandAddNoSandbox.isChecked() and os.path.exists("{}/.config/gx-env/nosandbox".format(homePath)):
             os.remove("{}/.config/gx-env/nosandbox".format(homePath))
-        os.system("pkexec env `printenv` gx-env-run")
+        os.system("pkexec env `gx-env-show-env-list` gx-env-run")
         QtWidgets.QMessageBox.information(window, "提示", "设置完成！")
         
     except:
